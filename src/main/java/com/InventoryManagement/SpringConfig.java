@@ -13,7 +13,7 @@ import org.springframework.context.annotation.PropertySource;
 //@PropertySource("classpath:application.properties") 
 @Configuration
 @ComponentScan(basePackages = {"com.InventoryManagement"})
-@PropertySource("classpath:application-${spring.profiles.active}.properties")// load these properties into the Environment
+//@PropertySource("classpath:application-${spring.profiles.active}.properties")// load these properties into the Environment
 public class SpringConfig {
 	public static void main(String[] args) {
 		//start the spring app by creating the IOC container
