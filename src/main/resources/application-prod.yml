@@ -6,7 +6,15 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/chinook
     username: root
-    password: welcome1
+    password: root
+  
+  jpa:
+    show-sql: true
+    # please use Pascal_Case so you don't need this:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: none
 
 logging:
   level:
