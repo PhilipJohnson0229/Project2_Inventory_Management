@@ -39,7 +39,7 @@ public class Item{
 	//private ApplicationContext applicationContext;
 	public Item() {
 		super();
-		// TODO Auto-generated constructor stub
+		// test 
 	}
 
 	public Item(int id, String name, int catFk, int strFk) {
