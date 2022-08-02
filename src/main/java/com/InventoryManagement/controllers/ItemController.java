@@ -41,7 +41,7 @@ public class ItemController {
 	@Autowired
 	private ItemRepo repo;
 	
-	//private static final Logger log = LoggerFactory.getLogger(ArtistController.class);
+	//private static final Logger log = LoggerFactory.getLogger(ItemController.class);
 
 	//means this method will be mapped do a GET request
 	//@ResponseBody //this tells spring not to redirect to another page just inject data into response body
@@ -58,13 +58,11 @@ public class ItemController {
 		 Item newItem = new Item();
 		 newItem.setId(id);
 		 newItem.setName(name);
-		 newItem.setCatFk(catId);
-		 newItem.setStrFk(strId);
 		 
 	     repo.save(newItem);
 	}
 	
-	// http://localhost:8080/artist/155 - PathVariable
+	
 	@GetMapping("/{id}")
 	public ResponseEntity<Item> findById(@PathVariable int id, Authentication principal) {
 		// SecurityContext - stores all Authentication info in HttpSession
@@ -75,14 +73,14 @@ public class ItemController {
 		return ResponseEntity.ok(repo.findById(id).orElse(new Item()));
 	}
 	
-	@PostMapping // objectMapper.readValue(req.getInputStream(), Artist.class)
-	@Transactional // 
+	@PostMapping 
+	@Transactional  
 	public ResponseEntity<Item> save(@Valid @RequestBody Item artist) { // 400
 		return new ResponseEntity<>(repo.save(artist), HttpStatus.CREATED);
 	}
 	
 	@PostMapping("/many")  
-	@Transactional //(rollbackFor = org.h2.jdbc.JdbcSQLDataException.class)
+	@Transactional 
 	public ResponseEntity<Void> saveMany(@RequestBody List<Item> items) { 
 		for (Item artist : items) {
 			repo.save(artist); // any one fails - rollback
@@ -99,7 +97,7 @@ public class ItemController {
 			return repo.findByNameLike("%" + name + "%");
 		}else 
 		{
-			return repo.findAll();
+			return repo.findAllItemsComplete();
 		} 
 	}
 	

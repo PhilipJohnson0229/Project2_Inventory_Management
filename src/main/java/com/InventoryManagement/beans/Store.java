@@ -2,44 +2,46 @@ package com.InventoryManagement.beans;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="Store")
 public class Store {
 
 	@Id
-	@Column(name = "storeId")
-	private int storeId;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	private int id;
 	
 	@Column(name = "name")
-	@NotBlank //Validator inside bean as per JSR 303
 	private String name;
 	
 	@Column(name = "location")
+	@JsonIgnore
 	private String location;
+	
+	@OneToOne(mappedBy = "store")
+	@JsonIgnore
+	private Item item;
 	
 	public Store() 
 	{
 		super();
 	}
 	
-	public Store(int storeId, String name, String location) 
-	{
-		this.storeId = storeId;
+	public Store(String name, String location) {
+		super();
 		this.name = name;
 		this.location = location;
 	}
 
-	public int getStoreId() {
-		return storeId;
-	}
 
-	public void setStoreId(int storeId) {
-		this.storeId = storeId;
-	}
 
 	public String getName() {
 		return name;
@@ -57,10 +59,22 @@ public class Store {
 		this.location = location;
 	}
 
-	@Override
-	public String toString() {
-		return "Store [storeId=" + storeId + ", name=" + name + ", location=" + location + "]";
+	public Item getItem() {
+		return item;
 	}
+
+	public void setItem(Item item) {
+		this.item = item;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+	
 	
 	
 }

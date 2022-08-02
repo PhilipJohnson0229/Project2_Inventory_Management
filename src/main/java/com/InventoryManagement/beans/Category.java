@@ -1,21 +1,13 @@
 package com.InventoryManagement.beans;
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 //Hibernate implementation JPA
 
@@ -24,8 +16,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 //this will be a stateful bean because it stores application state
 @Entity
-@Table(name="Item")
-public class Item{
+@Table(name="Category")
+public class Category{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,32 +27,22 @@ public class Item{
 	@Column(name = "name")
 	private String name;
 	
-	@Column(name = "price")
-	private String price;
+	@Column(name = "description")
+	private String description;
 	
-	@OneToOne
-	@JoinColumn(name = "catFk")
-	@JsonIgnore
-	private Category category;
-	
-	@OneToOne
-	@JoinColumn(name = "strFk")
-	@JsonIgnore
-	private Store store;
+	@OneToOne(mappedBy = "category")
+	private Item item;
 	
 	//private ApplicationContext applicationContext;
-	
-	public Item() {
+	public Category() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
 	
-	
-	public Item(String name, String price) {
+	public Category(String name, String description) {
 		super();
 		this.name = name;
-		this.price = price;
+		this.description = description;
 	}
 
 
@@ -81,29 +63,21 @@ public class Item{
 		this.name = name;
 	}
 
-	public String getPrice() {
-		return price;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setPrice(String price) {
-		this.price = price;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public Category getCategory() {
-		return category;
+	public Item getItem() {
+		return item;
 	}
 
-	public void setCategory(Category category) {
-		this.category = category;
+	public void setItem(Item item) {
+		this.item = item;
 	}
-
-	public Store getStore() {
-		return store;
-	}
-
-	public void setStore(Store store) {
-		this.store = store;
-	}
-
+	
 	
 }

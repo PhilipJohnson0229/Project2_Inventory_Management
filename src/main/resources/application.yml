@@ -14,6 +14,7 @@ spring:
     password: Newlife123
     
   jpa:
+    show-sql: true
     # please use Pascal_Case so you don't need this:
     hibernate:
       naming:
