@@ -1,82 +1,88 @@
 package com.InventoryManagement.beans;
 
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
-//Hibernate implementation JPA
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-//JSR 303 very important security standard
-//Bean validation: validation will be done inside the bean itself
-
-//this will be a stateful bean because it stores application state
 @Entity
 @Table(name="Category")
-public class Category{
+public class Category {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
 	
-	@Column(name = "name")
+	@Column(name = "Name")
+	@NotBlank
 	private String name;
 	
-	@Column(name = "description")
+	@Column(name = "Description")
 	private String description;
 	
-	@OneToOne(mappedBy = "category")
-	private Item item;
 	
-	//private ApplicationContext applicationContext;
+	@OneToMany(mappedBy = "category")
+	@JsonIgnore
+	private Set<Item> items;
+
+
 	public Category() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
-	
-	public Category(String name, String description) {
-		super();
-		this.name = name;
-		this.description = description;
-	}
-
 
 
 	public int getId() {
 		return id;
 	}
 
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
 
 	public String getName() {
 		return name;
 	}
 
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 
 	public String getDescription() {
 		return description;
 	}
 
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
-	public Item getItem() {
-		return item;
+
+	public Set<Item> getItems() {
+		return items;
 	}
 
-	public void setItem(Item item) {
-		this.item = item;
+
+	public void setItems(Set<Item> items) {
+		this.items = items;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Category [id=" + id + ", name=" + name + ", description=" + description + "]";
 	}
 	
 	

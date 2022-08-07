@@ -3,9 +3,9 @@ package com.InventoryManagement.data;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.InventoryManagement.beans.Store;
+import com.InventoryManagement.beans.Category;
 
 @Repository
-public interface StoreRepo extends JpaRepository<Store, Integer> {
+public interface CategoryRepo extends JpaRepository<Category, Integer> {
 
 }

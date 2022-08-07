@@ -2,20 +2,11 @@ package com.InventoryManagement.beans;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 //Hibernate implementation JPA
 
@@ -23,87 +14,97 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 //Bean validation: validation will be done inside the bean itself
 
 //this will be a stateful bean because it stores application state
+
 @Entity
 @Table(name="Item")
 public class Item{
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
 	
 	@Column(name = "name")
 	private String name;
 	
+	
 	@Column(name = "price")
 	private String price;
-	
-	@OneToOne
-	@JoinColumn(name = "catFk")
-	@JsonIgnore
-	private Category category;
-	
-	@OneToOne
-	@JoinColumn(name = "strFk")
-	@JsonIgnore
+
+	//@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name ="store_id")
 	private Store store;
 	
-	//private ApplicationContext applicationContext;
+	//@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name ="category_id")
+	private Category category;
 	
 	public Item() {
 		super();
-		// test 
 	}
-
-	
-	
-	public Item(String name, String price) {
-		super();
-		this.name = name;
-		this.price = price;
-	}
-
 
 
 	public int getId() {
 		return id;
 	}
 
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
 
 	public String getName() {
 		return name;
 	}
 
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 
 	public String getPrice() {
 		return price;
 	}
 
+
 	public void setPrice(String price) {
 		this.price = price;
 	}
 
-	public Category getCategory() {
-		return category;
-	}
-
-	public void setCategory(Category category) {
-		this.category = category;
-	}
 
 	public Store getStore() {
 		return store;
 	}
 
+
 	public void setStore(Store store) {
 		this.store = store;
 	}
 
+	
+
+	public Category getCategory() {
+		return category;
+	}
+
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Item [id=" + id + ", name=" + name + ", price=" + price + ", store=" + store + ", category=" + category
+				+ "]";
+	}
+
+
+	
+	
+	
 	
 }
