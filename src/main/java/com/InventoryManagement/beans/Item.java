@@ -31,12 +31,12 @@ public class Item{
 	private String price;
 
 	//@ManyToOne(fetch = FetchType.LAZY)
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@JoinColumn(name ="store_id")
 	private Store store;
 	
 	//@ManyToOne(fetch = FetchType.LAZY)
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@JoinColumn(name ="category_id")
 	private Category category;
 	
