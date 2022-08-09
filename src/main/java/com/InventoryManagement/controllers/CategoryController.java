@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.InventoryManagement.beans.Category;
@@ -14,6 +15,7 @@ import com.InventoryManagement.data.CategoryRepo;
 
 @RestController
 @CrossOrigin(origins = "*")
+@RequestMapping("/categories")
 public class CategoryController {
 
     @Autowired

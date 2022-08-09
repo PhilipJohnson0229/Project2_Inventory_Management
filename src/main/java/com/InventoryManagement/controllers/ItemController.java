@@ -10,10 +10,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +26,7 @@ import com.InventoryManagement.service.ItemService;
 //receives requests and passes the params and path vriables to the service
 @RestController
 @CrossOrigin(origins = "*")
+@RequestMapping("/items")
 public class ItemController {
 	
 	private static final Logger log = LoggerFactory.getLogger(ItemController.class);
@@ -38,8 +41,13 @@ public class ItemController {
     }
     
     @GetMapping("/getStoreItemsId")
-    public List<Item> getItemsByStoreId(@RequestParam(name = "id", required = true) int id){
+    public List<Item> getItemsByStoreId(@RequestParam(name = "id", required = true) int id, Authentication principal){
+    	//SecurityContext - stores all Authentication info in HttpSession
+    	//SecurityContextHolder
     	log.info("using the getItemsByStoreId method and the requested id is " + id);
+    	log.debug("we're in the findById method"); // INFO default threshold
+		log.debug("findById URL: /artist/" + id);
+		log.info("Current user: " + principal.getName());
         return service.findItemByStoreId(id);
     }
     
@@ -62,4 +70,6 @@ public class ItemController {
 		}
 		return ResponseEntity.noContent().build();
 	}
+	
+	//TODO need to implement update and delete methods that preauthenticate with admin role
 }
