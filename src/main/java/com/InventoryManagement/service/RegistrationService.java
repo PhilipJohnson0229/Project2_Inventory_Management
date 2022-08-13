@@ -10,6 +10,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.InventoryManagement.utils.CustomPasswordEncoder;
+
 @Service
 public class RegistrationService {
 
@@ -17,11 +19,11 @@ public class RegistrationService {
 	private JdbcTemplate jdbcTemplate;
 
 	@Autowired
-	private BCryptPasswordEncoder passwordEncoder;
+	private CustomPasswordEncoder passwordEncoder;
 
 	public void register(String username, String password) {
 		// hash password upon registration
-		String hash = passwordEncoder.encode(password);
+		String hash = passwordEncoder.getPasswordEncoder().encode(password);
 
 		// insert the user and associated roles
 		String userSql = "insert into users values(?, ?, true)";

@@ -1,5 +1,6 @@
 package com.InventoryManagement;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,22 +8,34 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.InventoryManagement.filter.FilterChainConfig;
+import com.InventoryManagement.filter.JwtFilter;
+import com.InventoryManagement.utils.CustomPasswordEncoder;
 
 @Configuration
-//@EnableGlobalMethodSecurity  // role-based access control (RBAC) to methods.. not just URL
+@EnableWebSecurity  // role-based access control (RBAC) to methods.. not just URL
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Autowired // Spring Data JPA should have a datasource already
-	private DataSource datasource;
+	//@Autowired // Spring Data JPA should have a datasource already
+	//private DataSource datasource;
 	
 	@Autowired
-	private PasswordEncoder passwordEncoder;
+	private UserDetailsService userDetailsService;
+	@Autowired
+	private PasswordEncoder customPasswordEncoder;
+	
+	@Autowired
+    private JwtFilter jwtFilter;
+	//were going to use JWT JSON Web Tokens for statelessness 
 	
 	// Spring Security Filter logic (pseudo)
 	// 1. http-req Authentication Header, filter extract header/ decode base64 Authentication header
@@ -33,19 +46,27 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	// 6. authenticated or not?
 	// 7. Principal (user currently logged in). stores in HttpSession (any data needs to be Serializable) 
 	
-	@Autowired
-	protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		auth.jdbcAuthentication().dataSource(datasource).passwordEncoder(passwordEncoder);
+	@Override @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+	
+	
+	@Override 
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		// TODO Auto-generated method stub
+		auth.userDetailsService(userDetailsService).passwordEncoder(customPasswordEncoder);
+		//auth.userDetailsService(userDetailsService).passwordEncoder(customPasswordEncoder.getPasswordEncoder());
 	}
 	
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable().httpBasic(); // not-prod
+		/*http.csrf().disable().httpBasic(); // not-prod
 		http.authorizeRequests().mvcMatchers("/login-check").hasAnyRole("USER");
 		http.authorizeRequests().mvcMatchers("/items/**").hasAnyRole("USER");
 		http.authorizeRequests().mvcMatchers("/store/**").hasAnyRole("ADMIN");
 		http.authorizeRequests().mvcMatchers("/album/**").hasAnyRole("ADMIN");
 		http.authorizeRequests().mvcMatchers("/**").permitAll();
-		http.logout().deleteCookies("custom-cookie").invalidateHttpSession(true);
+		http.logout().deleteCookies("custom-cookie").invalidateHttpSession(true);*/
 		//http.logout().deleteCookies("custom-cookie").invalidateHttpSession(false);
 		// POST /logout
 		// CSRF - 
@@ -53,7 +74,28 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		// 2. hacker send you an email with link
 		// 3. click link href=malicious JS   POST boa.com/api/transfer/your-acct/myacct/balance
 		// 4. YOU initiated the request
-		
+		//http.csrf().disable().addFilterBefore(new FilterChainConfig(), UsernamePasswordAuthenticationFilter.class);
+		    http.csrf().disable().addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+		    .addFilterBefore(new FilterChainConfig(), UsernamePasswordAuthenticationFilter.class);
+	        
+	        http = http.sessionManagement()
+	                   .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+	                   .and();
+	        
+	        http = http.exceptionHandling()
+	                   .authenticationEntryPoint((request, response, ex) -> {
+	                       response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
+	                   }).and();
+	                   
+	        http.authorizeRequests()
+	            .antMatchers("/auth/**").permitAll()
+	            .antMatchers("/api").permitAll()
+	            .antMatchers("/items/**").permitAll()
+	            .antMatchers("/stores/**").permitAll()
+	            .antMatchers("/login").permitAll()
+	            .anyRequest().permitAll();
+	        
+	      
 		// generate a random csrf_token. Unsafe methods MUST contain the CSRF token or-else request is denied
 		
 	}

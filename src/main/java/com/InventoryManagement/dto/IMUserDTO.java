@@ -9,6 +9,18 @@ public class IMUserDTO {
 	public IMUserDTO() {
 		super();
 	}
+	
+	
+
+
+	public IMUserDTO(String username, String password) {
+		super();
+		this.username = username;
+		this.password = password;
+	}
+
+
+
 
 	public String getUsername() {
 		return username;
