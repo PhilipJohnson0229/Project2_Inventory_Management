@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
 
 import com.InventoryManagement.beans.Item;
@@ -48,6 +49,10 @@ public class ItemService {
 		return repo.findAll(PageRequest.of(page, DEFAULT_PAGE_SIZE)).toList();
 	}
 	
+	public Iterable<Item> findAllNoPage() 
+	{
+		return   repo.findAll();
+	}
 	
 	public Item save(Item item) 
 	{

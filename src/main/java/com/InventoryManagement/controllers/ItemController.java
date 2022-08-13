@@ -43,6 +43,12 @@ public class ItemController {
         return service.findAll(page);
     }
     
+    @GetMapping("/getItemsNoPage")
+	@ResponseBody					//Pagination -> ItemRepo extends PagingAndSortingRepository
+    public Iterable<Item> getItemsNoPage(@RequestParam(defaultValue = "0") int page){
+        return service.findAllNoPage();
+    }
+    
     @GetMapping("/getStoreItemsId")
     public List<Item> getItemsByStoreId(@RequestParam(name = "id", required = true) int id, Authentication principal){
     	//SecurityContext - stores all Authentication info in HttpSession
